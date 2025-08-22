@@ -11,6 +11,6 @@ const scubcriptionSchema  = new Schema({
         ref: "User"
     }
     
-}, {Timestamp: true})
+}, {timestamps: true})
 
 export const Subscription = mongoose.model("Subscription",scubcriptionSchema);
