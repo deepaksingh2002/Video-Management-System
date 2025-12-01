@@ -276,6 +276,10 @@ const userAvatarUpdate = asyncHandler (async(req, res) => {
     if(!avatar.url){
         throw new ApiError(400, "Error while uploading on avatar")
     }
+    if (req.user.avatar){
+        await cloudnaryDelete(req.user.avatar)
+    }
+    
     const user = await User.findByIdAndUpdate(req.user?._id,{
         $set: {
             avatar: avatar.url
@@ -302,6 +306,9 @@ const updateUserCoverImage = asyncHandler(async(req, res) => {
 
     if(!coverImage.url){
         throw new ApiError(400, "error while uploading on coverImage")
+    }
+    if (req.user.coverImage){
+        await cloudnaryDelete(req.user.coverImage)
     }
 
     const user = await User.findByIdAndUpdate(req.user?._id,{
