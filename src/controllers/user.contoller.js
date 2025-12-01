@@ -32,7 +32,7 @@ const registerUser = asyncHandler( async(req, res) => {
      // remove password and refresh token field from response
      // check for user creation
      // return res
-
+ 
     const {fullName, email, username, password} = req.body
     if(
         [fullName, email, username, password].some((field) => field?.trim() === "")
@@ -93,8 +93,7 @@ const registerUser = asyncHandler( async(req, res) => {
 })
 
 const loginUser = asyncHandler(async(req, res) => {
-    // req body -> data
-    // username or email
+    // req body -> data username or email
     // find the user
     //password check
     //acces and referesh token
