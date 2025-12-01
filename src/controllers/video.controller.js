@@ -36,7 +36,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
         .lean()
     const totalVideos = await Video.countDocuments(filter)
     const totalPages = Math.ceil(totalVideos / limitNum)    
-    res.status(200).json(new ApiResponse(true, "Videos fetched successfully", {
+    res.status(200).json(new ApiResponse(200,{
         videos,
         pagination: {
             totalVideos,
@@ -44,9 +44,49 @@ const getAllVideos = asyncHandler(async (req, res) => {
             currentPage: parseInt(page),
             pageSize: parseInt(limit)
         }
-    }))
-
+    },"Videos fetched successfully"))
 });
 
+const publishAVideo = asyncHandler(async (req, res) => {
+    const { title, description} = req.body
+    // TODO: get video, upload to cloudinary, create video
+    if (!req.file) {
+        throw new ApiError(400, "Video file is required")
+    }
+    const userId = req.user._id
+    const user =  await User.findById(userId)
+    if (!user) {
+        throw new ApiError(404, "User not found")
+    }
+    const videoUrl = await cloudnaryUpload(req.file.path, 'video')
+    const newVideo = await Video.create({
+        title,
+        description,
+        videoUrl,
+        user: userId
+    })
+    res.status(201).json(new ApiResponse(200, newVideo, "Video published successfully"))
+});
 
-export {getAllVideos}
+const getVideoById = asyncHandler(async (req, res) => {
+    const { videoId } = req.params
+    //TODO: get video by id
+})
+
+const updateVideo = asyncHandler(async (req, res) => {
+    const { videoId } = req.params
+    //TODO: update video details like title, description, thumbnail
+
+})
+
+const deleteVideo = asyncHandler(async (req, res) => {
+    const { videoId } = req.params
+    //TODO: delete video
+})
+
+const togglePublishStatus = asyncHandler(async (req, res) => {
+    const { videoId } = req.params
+})
+
+
+export {getAllVideos, publishAVideo, getVideoById, updateVideo, deleteVideo, togglePublishStatus}
